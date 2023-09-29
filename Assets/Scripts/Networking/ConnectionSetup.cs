@@ -1,84 +1,83 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
+
 public class ConnectionSetup : MonoBehaviourPunCallbacks
 {
-    [SerializeField]
-    private TextMeshProUGUI logger;
+    [SerializeField] private GameObject connectionPanel, loadingPanel;
+    private byte maxPlayersPerRoom = 4;
+    private DebugManager debugger;
 
-    private int maxPlayers = 4;
+    private void Start()
+    {
+        debugger = DebugManager.Instance;
+        loadingPanel.SetActive(false);
+        connectionPanel.SetActive(true);
+    }
+
     public override void OnConnectedToMaster()
     {
-        Log("Connected to the Master Server.", "green");
-        Log("Trying to join a random room..");
-        //When connected to the master server, attempt to join a random room
+        debugger.Log("Connected to the master server.", "green");
+        debugger.Log("Trying to join a random room");
         PhotonNetwork.JoinRandomRoom();
     }
 
     //When you joined a room
     public override void OnJoinedRoom()
     {
-        Log("Successfully joined a room", "green");
+        debugger.Log("Successfully joined a room.", "green");
         DisplayRoomInformation();
+        loadingPanel.SetActive(false);
     }
 
-    //When others join the room
+    //When another player enters your room
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Log($"{newPlayer.NickName} has joined the room", "green");
+        debugger.Log(newPlayer.NickName + " has joined the room", "green");
         DisplayRoomInformation();
     }
 
-    //When other left the room
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Log($"{otherPlayer.NickName} has left the room", "orange");
+        debugger.Log(otherPlayer.NickName + " has exited the room", "red");
         DisplayRoomInformation();
-    }
-
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        Log($"Failed to join random room: {message}", "red");
-        //If no rooms availabe (all rooms at max capacity or no roooms created), create a new room
-        string roomName = $"{PhotonNetwork.NickName}'s Room";
-        PhotonNetwork.CreateRoom(roomName, new Photon.Realtime.RoomOptions
-        { MaxPlayers = maxPlayers });
-    }
-
-    public void Connect()
-    {
-        //Check first if we are already connected to the PhotonNetwork
-        if (PhotonNetwork.IsConnected)
-        {
-            Log("Already connected");
-        }
-        else
-        {
-            //Attempt to connect to the Photon Network
-            PhotonNetwork.ConnectUsingSettings();
-        }
     }
 
     private void DisplayRoomInformation()
     {
-        Log($"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers} " +
-            $"Players in {PhotonNetwork.CurrentRoom.Name}", "orange");
+        debugger.Log(string.Format("{0}/{1} Players in {2}",
+            PhotonNetwork.CurrentRoom.PlayerCount,
+            PhotonNetwork.CurrentRoom.MaxPlayers,
+            PhotonNetwork.CurrentRoom.Name), "orange");
     }
-    public void Log(string message, string colorCode = null)
-    {
-        if(logger == null)
-        {
-            Debug.Log(message);
-            return;
-        }
 
-        logger.text += (string.IsNullOrEmpty(colorCode) ? "" : "<color=" + colorCode + ">") +
-            message + (string.IsNullOrEmpty(colorCode) ? "" : "</color>") 
-            + System.Environment.NewLine;
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        debugger.Log("Failed to join a random room: " + message, "red");
+        debugger.Log("Try create a room instead.");
+        //If no rooms are available (all rooms are at max capacity, no rooms created), we simply create a new room
+        PhotonNetwork.CreateRoom(PhotonNetwork.NickName + "'s Room",
+            new Photon.Realtime.RoomOptions { MaxPlayers = maxPlayersPerRoom });
     }
+
+    public void Connect()
+    {
+        // Check first if we are already connected to the Photon Network
+        if (PhotonNetwork.IsConnected)
+        {
+            debugger.Log("Already connected to photon network.");
+        }
+        else
+        {
+            debugger.Log("Not yet connected to photon network. Trying to connect..");
+            PhotonNetwork.ConnectUsingSettings();
+            loadingPanel.SetActive(true);
+        }
+    } 
 }
