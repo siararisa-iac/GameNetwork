@@ -34,6 +34,9 @@ public class ConnectionSetup : MonoBehaviourPunCallbacks
         debugger.Log("Successfully joined a room.", "green");
         DisplayRoomInformation();
         loadingPanel.SetActive(false);
+
+        //Load the game scene
+        PhotonNetwork.LoadLevel(1);
     }
 
     //When another player enters your room
