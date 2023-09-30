@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
+    private PhotonView photonView;
 	[SerializeField]
 	private float maxSpeed = 2.0f;
 	[SerializeField]
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        photonView = GetComponent<PhotonView>();
         //Repeat calling the function "ShootBullet" every fireRate seconds
         //after the initial delay of 0.001f seconds
         InvokeRepeating("ShootBullet", 0.001f, fireRate);
@@ -29,6 +32,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine) return;
+
         HandleMovement();
     }
 
