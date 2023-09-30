@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,13 +21,23 @@ public class PlayerController : MonoBehaviour
 
 	private float currentSpeed; 
 	private float timeCounter;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         photonView = GetComponent<PhotonView>();
+        PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayerSprite;
         //Repeat calling the function "ShootBullet" every fireRate seconds
         //after the initial delay of 0.001f seconds
         InvokeRepeating("ShootBullet", 0.001f, fireRate);
+    }
+
+    void UpdatePlayerSprite()
+    {
+        //Change the sprite to match the index of the sprite array
+        int playerNumber = photonView.Owner.GetPlayerNumber();
+        NetworkManager.Instance.GetPlayerSprite(playerNumber);
     }
 
     // Update is called once per frame
