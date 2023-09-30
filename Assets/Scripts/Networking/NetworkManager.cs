@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 
-public class NetworkManager : Singleton<NetworkManager>
+public class NetworkManager : SingletonPUN<NetworkManager>
 {
     private const string PlayerPrefabName = "Player";
     [SerializeField]
