@@ -1,17 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Photon.Pun;
+using System;
+using Photon.Realtime;
+using Photon.Pun.UtilityScripts;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviourPunCallbacks
 {
     [SerializeField]
-    private float moveSpeed = 5.0f;
+    private float maxHealth = 100;
+    [SerializeField]
+    private float moveSpeed = 2.0f;
+    [SerializeField]
+    private int scorePoints = 100;
 
+    [SerializeField]
+    private Image healthbar;
+
+    private float currentHealth;
     private Transform target;
+    private bool isDestroyed;
 
     private void OnEnable()
     {
         LookAtTarget();
+        currentHealth = maxHealth;
+    }
+
+    private void UpdateHealthbar()
+    {
+        healthbar.fillAmount = currentHealth / maxHealth;
     }
 
     private void LookAtTarget()
@@ -43,5 +63,53 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         Move();
+    }
+
+    public void NetworkDestroy()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            DestroyGlobally();
+        else
+            DestroyLocally();
+    }
+
+    private void DestroyLocally()
+    {
+        isDestroyed = true;
+    }
+
+    private void DestroyGlobally()
+    {
+        PhotonNetwork.Destroy(this.gameObject);
+        isDestroyed = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.TryGetComponent<Bullet>(out Bullet bullet))
+        {
+            TakeDamage(bullet.Damage, bullet.Owner);
+        }
+    }
+
+    public void TakeDamage(float damage, Player from)
+    {
+        currentHealth -= damage;
+        UpdateHealthbar();
+
+        if(currentHealth <= 0)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                foreach(Player p in PhotonNetwork.PlayerList)
+                {
+                    if(p.ActorNumber == from.ActorNumber)
+                    {
+                        p.AddScore(scorePoints);
+                    }
+                }
+            }
+            NetworkDestroy();
+        }
     }
 }

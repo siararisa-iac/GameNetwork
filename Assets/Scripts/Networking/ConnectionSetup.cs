@@ -35,7 +35,7 @@ public class ConnectionSetup : MonoBehaviourPunCallbacks
         DisplayRoomInformation();
         loadingPanel.SetActive(false);
 
-        //Load the game scene
+        //Load the game scene here
         PhotonNetwork.LoadLevel(1);
     }
 

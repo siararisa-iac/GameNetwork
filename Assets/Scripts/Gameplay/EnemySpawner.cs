@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemySpawner : MonoBehaviourPunCallbacks
 {
     private Boundary boundary;
     [SerializeField]
@@ -15,8 +17,22 @@ public class EnemySpawner : MonoBehaviour
 
     private float spawnInterval;
     private bool isSpawning;
-    // Start is called before the first frame update
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if(PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+        {
+            CalculateScreenRestrictions();
+        }
+    }
+
     void Start()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        CalculateScreenRestrictions();
+    }
+
+    private void CalculateScreenRestrictions()
     {
         boundary = new Boundary();
         boundary.CalculateScreenRestrictions();
@@ -24,7 +40,9 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if(!isSpawning)
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (!isSpawning)
             StartCoroutine(SpawnCoroutine());
     }
 
@@ -35,10 +53,18 @@ public class EnemySpawner : MonoBehaviour
         isSpawning = true;
         //Wait for the spawnInterval
         yield return new WaitForSeconds(spawnInterval);
-        SpawnEnemy();
+        //SpawnEnemy();
+        SpawnOverNetwork();
         isSpawning = false;
     }
 
+    private void SpawnOverNetwork()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.InstantiateRoomObject(enemyId, GetSpawnPosition(), Quaternion.identity);
+        }
+    }
     private void SpawnEnemy()
     {
         //Get an object from the pool

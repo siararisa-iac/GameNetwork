@@ -1,7 +1,8 @@
-using Photon.Pun;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
-public class SingletonPUN<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPunCallbacks
+using Photon.Pun;
+public class SingletonPun<T> : MonoBehaviourPunCallbacks where T: MonoBehaviourPunCallbacks
 {
     //Enable this if you want the object to persist in between scenes
     [SerializeField]
@@ -24,7 +25,7 @@ public class SingletonPUN<T> : MonoBehaviourPunCallbacks where T : MonoBehaviour
             {
                 //load a gameobject from the resources folder that has the generic component
                 //check if the System folder in the Resources folder has a prefab of the generic component
-                if (Resources.Load<T>("System/" + typeof(T).Name) != null)
+                if(Resources.Load<T>("System/" + typeof(T).Name) != null)
                 {
                     //if the prefab is found, instantiate that prefab
                     T instance = Resources.Load<T>("System/" + typeof(T).Name);
@@ -50,10 +51,10 @@ public class SingletonPUN<T> : MonoBehaviourPunCallbacks where T : MonoBehaviour
             _instance = this as T;
 
         //if there is already an existing instance
-        if (_instance != null)
+        if(_instance != null)
         {
             //check if self is not the actual instance
-            if (_instance != this as T)
+            if(_instance != this as T)
             {
                 //Destroy self because there can only be one instance - SINGLETON DESIGN PATTERN
                 Destroy(this.gameObject);

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
-
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     private PhotonView photonView;
+    private SpriteRenderer spriteRenderer;
+
 	[SerializeField]
 	private float maxSpeed = 2.0f;
 	[SerializeField]
 	private float radius = 1.0f;
 	[SerializeField]
 	private float fireRate = 0.1f;
+    [SerializeField]
+    private float baseDamage = 20f;
 
     [SerializeField]
     //What is the ID of the pooled object that we want as a bullet
@@ -21,38 +24,38 @@ public class PlayerController : MonoBehaviour
 
 	private float currentSpeed; 
 	private float timeCounter;
-    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayerSprite;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        PlayerNumbering.OnPlayerNumberingChanged -= UpdatePlayerSprite;
+    }
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        photonView = GetComponent<PhotonView>();
         //Repeat calling the function "ShootBullet" every fireRate seconds
         //after the initial delay of 0.001f seconds
         InvokeRepeating("ShootBullet", 0.001f, fireRate);
     }
 
-    private void OnEnable()
-    {
-        PlayerNumbering.OnPlayerNumberingChanged += UpdatePlayerSprite;
-    }
-
-    private void OnDisable()
-    {
-        PlayerNumbering.OnPlayerNumberingChanged -= UpdatePlayerSprite;
-    }
-
-    void UpdatePlayerSprite()
-    {
-        //Change the sprite to match the index of the sprite array
-        int playerNumber = photonView.Owner.GetPlayerNumber();
-        spriteRenderer.sprite = NetworkManager.Instance.GetPlayerSprite(playerNumber);
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine) return;
+        //Control only the player which we own
+        if (!photonView.IsMine)
+            return;
 
         HandleMovement();
     }
@@ -95,10 +98,16 @@ public class PlayerController : MonoBehaviour
             //Modify the bullet's position and rotation
             pooledBullet.transform.position = transform.position;
             pooledBullet.transform.rotation = transform.rotation;
+            pooledBullet.GetComponent<Bullet>().InitializeValues(baseDamage, photonView.Owner);
             //Enable the gameObject
             pooledBullet.SetActive(true);
         }
     }
 
-
+    private void UpdatePlayerSprite()
+    {
+        //Change the sprite to match the index of the sprite array
+        int playerNumber = photonView.Owner.GetPlayerNumber();
+        spriteRenderer.sprite = NetworkManager.Instance.GetPlayerSprite(playerNumber);
+    }
 }

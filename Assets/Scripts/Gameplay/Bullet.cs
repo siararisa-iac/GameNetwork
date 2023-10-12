@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    public float Damage { get; private set; }
+    public Player Owner { get; private set; }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -17,6 +21,12 @@ public class Bullet : MonoBehaviour
         //Destroy(this.gameObject, 3.0f);
         boundary = new Boundary();
         boundary.CalculateScreenRestrictions();
+    }
+
+    public void InitializeValues(float damage, Player owner)
+    {
+        this.Damage = damage;
+        this.Owner = owner;
     }
 
     private void OnEnable()

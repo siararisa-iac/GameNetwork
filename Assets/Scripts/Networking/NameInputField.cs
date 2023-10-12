@@ -1,14 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(TMP_InputField))]
 public class NameInputField : MonoBehaviour
 {
     private TMP_InputField input;
-    [SerializeField]
-    private Button connectButton;
+    [SerializeField] private Button connectButton;
 
     private void Awake()
     {
@@ -16,7 +17,6 @@ public class NameInputField : MonoBehaviour
         connectButton.interactable = false;
     }
 
-    //Normally, we would sign in and check our database, but for now we register a nickname for the player
     public void SetPlayerNickName(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -24,7 +24,7 @@ public class NameInputField : MonoBehaviour
             connectButton.interactable = false;
             return;
         }
-        //Set the nickname of the player
+        //Set the name of the player in photon
         PhotonNetwork.NickName = value;
         connectButton.interactable = true;
     }
