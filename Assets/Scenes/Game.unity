@@ -208,6 +208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 148213049}
   - component: {fileID: 148213048}
+  - component: {fileID: 148213050}
   m_Layer: 0
   m_Name: ObjectPoolManager
   m_TagString: Untagged
@@ -232,12 +233,17 @@ MonoBehaviour:
   - id: PlayerBullet
     objectToPool: {fileID: 3454508026975926055, guid: f4ff8aef46efa874e9dd54110ccfbdf3, type: 3}
     parent: {fileID: 195989605}
-    amountToPool: 10
-    shouldExpand: 0
+    amountToPool: 20
+    shouldExpand: 1
   - id: Enemy
     objectToPool: {fileID: 1655670297867339050, guid: 766243e629b99ff4e8500aa33c2488e4, type: 3}
     parent: {fileID: 195989605}
     amountToPool: 10
+    shouldExpand: 0
+  - id: Player
+    objectToPool: {fileID: 6769417025359725927, guid: 4a971622aab36f9468bdf0ff89c1c597, type: 3}
+    parent: {fileID: 195989605}
+    amountToPool: 4
     shouldExpand: 0
   pooledObjects: []
 --- !u!4 &148213049
@@ -256,6 +262,18 @@ Transform:
   - {fileID: 195989605}
   m_Father: {fileID: 1206292906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &148213050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148213047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b0daaa9c456734cb46b6a17ab89e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &195989604
 GameObject:
   m_ObjectHideFlags: 0

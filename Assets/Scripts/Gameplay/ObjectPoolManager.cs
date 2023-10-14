@@ -30,6 +30,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
     }
 
+    public void ReturnObjectToPool(GameObject go)
+    {
+        if (pooledObjects.Contains(go))
+        {
+            go.SetActive(false);
+        }
+    }
+
     public GameObject GetPooledObject(string id)
     {
         //Check all gameobject in the pooledobjects

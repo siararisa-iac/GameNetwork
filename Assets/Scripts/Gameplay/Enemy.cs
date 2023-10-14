@@ -23,10 +23,18 @@ public class Enemy : MonoBehaviourPunCallbacks
     private Transform target;
     private bool isDestroyed;
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
+        ResetValues();
+    }
+
+    private void ResetValues()
+    {
+        isDestroyed = false;
         LookAtTarget();
         currentHealth = maxHealth;
+        healthbar.fillAmount = 1.0f;
     }
 
     private void UpdateHealthbar()
