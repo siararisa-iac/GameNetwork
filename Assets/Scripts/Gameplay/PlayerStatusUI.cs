@@ -13,9 +13,13 @@ public class PlayerStatusUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI playerName;
     [SerializeField]
+    private TextMeshProUGUI playerScore;
+    [SerializeField]
     private Image playerIcon;
     [SerializeField]
     private GameObject waiting, connected;
+
+    private Photon.Realtime.Player player;
 
     private void OnEnable()
     {
@@ -27,6 +31,16 @@ public class PlayerStatusUI : MonoBehaviour
         PlayerNumbering.OnPlayerNumberingChanged -= UpdateUI;
     }
 
+    private void Update()
+    {
+        if(player == null)
+        {
+            return;
+        }
+
+        playerScore.text = player.GetScore().ToString();
+    }
+
     void UpdateUI()
     {
         //Check if there is an available player
@@ -35,9 +49,10 @@ public class PlayerStatusUI : MonoBehaviour
             waiting.SetActive(false);
             connected.SetActive(true);
             //Update the info
-            Photon.Realtime.Player player = PhotonNetwork.PlayerList[playerNumber];
+            player = PhotonNetwork.PlayerList[playerNumber];
             playerName.text = player.NickName;
             playerIcon.sprite = NetworkManager.Instance.GetPlayerSprite(playerNumber);
+            playerScore.text = player.GetScore().ToString();
         }
         else
         {

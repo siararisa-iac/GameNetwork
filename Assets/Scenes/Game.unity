@@ -235,7 +235,7 @@ MonoBehaviour:
     amountToPool: 10
     shouldExpand: 0
   - id: Enemy
-    objectToPool: {fileID: 5220219020546647959, guid: d06947ae7a2daba4c8b9caf8e91de62b, type: 3}
+    objectToPool: {fileID: 1655670297867339050, guid: 766243e629b99ff4e8500aa33c2488e4, type: 3}
     parent: {fileID: 195989605}
     amountToPool: 10
     shouldExpand: 0
@@ -458,6 +458,10 @@ PrefabInstance:
     - target: {fileID: 3696149058194034707, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5654753499415894301, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
+      propertyPath: playerNumber
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5859049680848337098, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
       propertyPath: playerNumber
@@ -1028,6 +1032,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5654753499415894301, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
+      propertyPath: playerNumber
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5859049680848337098, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
       propertyPath: playerNumber
       value: 2
@@ -1344,6 +1352,10 @@ PrefabInstance:
     - target: {fileID: 3696149058194034707, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5654753499415894301, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
+      propertyPath: playerNumber
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5859049680848337098, guid: e88cde70945bad54fb4ed92d55d2cc5e, type: 3}
       propertyPath: playerNumber

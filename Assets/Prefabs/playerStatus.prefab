@@ -430,7 +430,7 @@ GameObject:
   - component: {fileID: 3696149058194034707}
   - component: {fileID: 3696149058194034733}
   - component: {fileID: 3696149058194034706}
-  - component: {fileID: 5859049680848337098}
+  - component: {fileID: 5654753499415894301}
   m_Layer: 5
   m_Name: playerStatus
   m_TagString: Untagged
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5859049680848337098
+--- !u!114 &5654753499415894301
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -511,6 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 0
   playerName: {fileID: 3696149057795531742}
+  playerScore: {fileID: 3696149058123862868}
   playerIcon: {fileID: 3696149057663702956}
   waiting: {fileID: 3696149057772041566}
   connected: {fileID: 3696149058202548889}
@@ -684,7 +685,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12.5
+  m_fontSize: 26.55
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

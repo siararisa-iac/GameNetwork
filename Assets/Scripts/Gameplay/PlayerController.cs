@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         //Repeat calling the function "ShootBullet" every fireRate seconds
         //after the initial delay of 0.001f seconds
-        InvokeRepeating("ShootBullet", 0.001f, fireRate);
+        InvokeRepeating("Shoot", 0.001f, fireRate);
     }
 
     // Update is called once per frame
@@ -86,7 +86,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
         transform.rotation = newRotation;
     }
 
-    private void ShootBullet()
+    private void Shoot()
+    {
+        //Ensure that the RPC call will be handled only by the local player
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        photonView.RPC("RPCShootBullet", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void RPCShootBullet()
     {
         //Instead of manually instantiating a bullet, we need to have it pooled to save up memory and for better performance
         //Instantiate(bullet, transform.position, transform.rotation);
@@ -104,10 +115,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
-    private void UpdatePlayerSprite()
+    [PunRPC] // mark this function as an RPC or Remote Procedure Call
+    // As a good practice to differentiate RPC methods to normal methods, add RPC at the beginning
+    private void RPCAssignPlayerSprite()
     {
         //Change the sprite to match the index of the sprite array
         int playerNumber = photonView.Owner.GetPlayerNumber();
         spriteRenderer.sprite = NetworkManager.Instance.GetPlayerSprite(playerNumber);
+    }
+
+    private void UpdatePlayerSprite()
+    {
+        photonView.RPC("RPCAssignPlayerSprite", RpcTarget.AllBufferedViaServer);
     }
 }

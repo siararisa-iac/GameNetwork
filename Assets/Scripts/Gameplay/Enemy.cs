@@ -62,6 +62,10 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (isDestroyed)
+        {
+            return;
+        }
         Move();
     }
 
@@ -94,11 +98,16 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public void TakeDamage(float damage, Player from)
     {
+        if (isDestroyed)
+        {
+            return;
+        }
         currentHealth -= damage;
         UpdateHealthbar();
 
         if(currentHealth <= 0)
         {
+            //Add score
             if (PhotonNetwork.IsMasterClient)
             {
                 foreach(Player p in PhotonNetwork.PlayerList)

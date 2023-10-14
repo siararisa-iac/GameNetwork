@@ -40,6 +40,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        //Don't do anything if you are not the master client
         if (!PhotonNetwork.IsMasterClient) return;
 
         if (!isSpawning)
