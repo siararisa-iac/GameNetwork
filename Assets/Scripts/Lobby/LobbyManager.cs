@@ -56,6 +56,12 @@ public class LobbyManager : SingletonPun<LobbyManager>
 
     public void StartGame()
     {
+        photonView.RPC("RPCLoadLevel", RpcTarget.AllBufferedViaServer);
+    }
+
+    [PunRPC]
+    private void RPCLoadLevel()
+    {
         PhotonNetwork.LoadLevel(1);
     }
 

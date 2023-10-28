@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviourPunCallbacks
     private float moveSpeed = 2.0f;
     [SerializeField]
     private int scorePoints = 100;
+    [SerializeField]
+    private float damage = 100;
 
     [SerializeField]
     private Image healthbar;
@@ -22,6 +24,8 @@ public class Enemy : MonoBehaviourPunCallbacks
     private float currentHealth;
     private Transform target;
     private bool isDestroyed;
+
+    public float Damage => damage;
 
     public override void OnEnable()
     {
